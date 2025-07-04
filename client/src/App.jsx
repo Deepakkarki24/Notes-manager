@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Signin from "./auth/Signin";
 import Navbar from "./pages/Navbar";
+import { Routes, Route } from "react-router";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   let [theme, setTheme] = useState("dark");
@@ -9,15 +11,11 @@ const App = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  useEffect(() => {
-    console.log(theme);
-  }, [theme]);
-
   return (
-    <div className="relative">
-      <Navbar handleTheme={handleTheme} theme={theme} />
-      <Signin theme={theme} />
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      {/* <Route path="/" element={<HomePage/>}/> */}
+    </Routes>
   );
 };
 

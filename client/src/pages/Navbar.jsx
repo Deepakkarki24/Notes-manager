@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
-const Navbar = ({ handleTheme, theme }) => {
+const Navbar = () => {
+  const { handleTheme, theme } = useContext(ThemeContext);
+
   return (
     <nav
       className={`navbar flex justify-between py-4 px-6
@@ -19,6 +22,7 @@ const Navbar = ({ handleTheme, theme }) => {
       </div>
       <div className="right">
         <div
+          onClick={handleTheme}
           className={`themebx text-[16px] border cursor-pointer rounded-4xl py-1.5 px-4
           
           ${
@@ -29,9 +33,7 @@ const Navbar = ({ handleTheme, theme }) => {
           
           `}
         >
-          <span onClick={handleTheme}>
-            {theme === "dark" ? "Light" : "Dark"}
-          </span>
+          <span>{theme === "dark" ? "Light" : "Dark"}</span>
         </div>
       </div>
     </nav>

@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import { ThemeContext } from "../context/ThemeContext";
 
-const Signin = ({ theme }) => {
-  const [username, setUsername] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Username submitted:", username);
-  };
+const Signin = () => {
+  let [username, setUsername] = useState("");
+  const { handleSubmit } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center 
+      className={`min-h-screen flex items-start justify-center 
         ${
           theme === "dark"
             ? "bg-[var(--darkThemeBg)] text-[var(--darkThemeText)]"
@@ -19,13 +18,13 @@ const Signin = ({ theme }) => {
         `}
     >
       <form
-        onSubmit={handleSubmit}
-        className=" border p-6 rounded-xl shadow-md w-80"
+        onSubmit={(e) => handleSubmit(e, username)}
+        className=" border p-6 rounded-xl mt-36 shadow-md w-90"
       >
         <h2 className="text-xl font-bold mb-4 text-center">Sign In</h2>
 
         <div className="mb-4">
-          <label htmlFor="username" className="block mb-1">
+          <label htmlFor="username" className="block text-sm mb-1">
             Username
           </label>
           <input
@@ -34,7 +33,7 @@ const Signin = ({ theme }) => {
             className="w-full px-3 py-2 border rounded-lg outline-none focus:ring focus:border-black"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            // required
           />
         </div>
 
