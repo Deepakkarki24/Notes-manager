@@ -7,11 +7,11 @@ import { UserProvider } from "./context/UserContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <UserProvider>
-    <ThemeProvider>
-      <BrowserRouter>
+  <BrowserRouter>
+    <UserProvider>
+      <ThemeProvider>
         <App />
-      </BrowserRouter>
-    </ThemeProvider>
-  </UserProvider>
+      </ThemeProvider>
+    </UserProvider>
+  </BrowserRouter>
 );

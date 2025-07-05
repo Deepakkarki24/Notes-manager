@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Signin from "./auth/Signin";
-import Navbar from "./pages/Navbar";
+import React, { useContext, useEffect, useState } from "react";
 import { Routes, Route } from "react-router";
 import HomePage from "./pages/HomePage";
+import PageNotFound from "./pages/PageNotFound";
+import NotesManager from "./pages/NotesManager";
+import { UserContext } from "./context/UserContext";
 
 const App = () => {
-  let [theme, setTheme] = useState("dark");
-
-  const handleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
+  const { token } = useContext(UserContext);
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      {token && <Route path="/dashboard" element={<NotesManager />} />}
+      <Route path="/*" element={<PageNotFound />} />
       {/* <Route path="/" element={<HomePage/>}/> */}
     </Routes>
   );

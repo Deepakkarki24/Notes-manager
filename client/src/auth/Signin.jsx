@@ -3,8 +3,7 @@ import { UserContext } from "../context/UserContext";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Signin = () => {
-  let [username, setUsername] = useState("");
-  const { handleSubmit } = useContext(UserContext);
+  const { handleSubmit, username, setUsername } = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -33,7 +32,7 @@ const Signin = () => {
             className="w-full px-3 py-2 border rounded-lg outline-none focus:ring focus:border-black"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            // required
+            required
           />
         </div>
 

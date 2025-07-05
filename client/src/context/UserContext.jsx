@@ -1,12 +1,19 @@
 import { createContext, useEffect, useState } from "react";
 import api from "../services/api.js";
+import { useNavigate } from "react-router";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  let [username, setUsername] = useState("");
   let [token, setToken] = useState(null);
+  let [user, setUser] = useState(null);
 
-  const handleSubmit = (e, username) => {
+  let navigate = useNavigate();
+
+  let [dbError, setDbError] = useState("");
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!username) return;
@@ -19,24 +26,51 @@ export const UserProvider = ({ children }) => {
 
       api
         .post("/sign-in", data)
-        .then((res) => setToken(res.data.data.token))
-        .catch((err) => console.log(err.message));
+        .then((res) => {
+          if (res.data.success) {
+          }
+          if (!res.data.success) {
+            setDbError(res.data.message);
+            return;
+          }
+          setToken(res.data.data.token);
+          setDbError("");
+          navigate("/dashboard");
+          setUsername("");
+        })
+        .catch((err) => setDbError(err.message));
     }
-    setUsername("");
   };
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem("token", token);
-    } else if (!token) {
-      let localToken = localStorage.getItem("token");
+    const localToken = localStorage.getItem("token");
+    if (localToken) setToken(localToken);
+  }, []);
 
-      setToken(localToken);
-    }
+  useEffect(() => {
+    if (!token) return;
+
+    localStorage.setItem("token", token);
+
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/user-details", {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setUser(res.data.data.username);
+      } catch (err) {
+        console.error("Failed to fetch user:", err.message);
+      }
+    };
+
+    fetchUser();
   }, [token]);
-
   return (
-    <UserContext.Provider value={{ handleSubmit, token }}>
+    <UserContext.Provider
+      value={{ handleSubmit, token, user, username, setUsername }}
+    >
       {children}
     </UserContext.Provider>
   );

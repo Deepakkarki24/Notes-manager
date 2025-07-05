@@ -27,12 +27,12 @@ userRouter.post("/sign-in", async (req, res) => {
   try {
     let userFound = await User.findOne({ username: username });
 
-    if (userFound) {
-      return res.status(409).json({
-        success: false,
-        message: "User already exist!",
-      });
-    }
+    // if (userFound) {
+    //   return res.status(409).json({
+    //     success: false,
+    //     message: "User already exist!",
+    //   });
+    // }
 
     let newUser = new User({
       username: username,
@@ -55,6 +55,40 @@ userRouter.post("/sign-in", async (req, res) => {
     });
   } catch (err) {
     res.status(502).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+userRouter.get("/user-details", async (req, res) => {
+  let token = req.headers.authorization;
+  console.log(token);
+
+  if (!token) {
+    return res.status(400).json({
+      success: false,
+      message: "User not found or not signin!",
+    });
+  }
+
+  try {
+    let userFound = await User.findOne({ token: token });
+
+    if (!userFound) {
+      return res.status(404).json({
+        success: false,
+        message: "User not exist!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User found!",
+      data: userFound,
+    });
+  } catch (err) {
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
