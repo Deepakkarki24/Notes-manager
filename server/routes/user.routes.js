@@ -7,8 +7,6 @@ const userRouter = express.Router();
 userRouter.post("/sign-in", async (req, res) => {
   let { username } = req.body;
 
-  console.log(username);
-
   if (!username) {
     return res.status(400).json({
       success: false,
@@ -27,32 +25,36 @@ userRouter.post("/sign-in", async (req, res) => {
   try {
     let userFound = await User.findOne({ username: username });
 
-    // if (userFound) {
-    //   return res.status(409).json({
-    //     success: false,
-    //     message: "User already exist!",
-    //   });
-    // }
+    if (!userFound) {
+      let newUser = new User({
+        username: username,
+        token: token,
+      });
 
-    let newUser = new User({
-      username: username,
-      token: token,
-    });
+      let savedUser = await newUser.save();
 
-    let savedUser = await newUser.save();
+      if (!savedUser) {
+        return res.status(500).json({
+          success: false,
+          message: "Error while save the user",
+        });
+      }
 
-    if (!savedUser) {
-      return res.status(500).json({
-        success: false,
-        message: "Error while save the user",
+      res.status(200).json({
+        success: true,
+        message: "User data saved",
+        data: savedUser,
       });
     }
-
-    res.status(200).json({
-      success: true,
-      message: "User data saved",
-      data: savedUser,
-    });
+    if (userFound) {
+      userFound.token = token;
+      await userFound.save();
+      return res.status(200).json({
+        success: true,
+        message: "Signed-in",
+        data: userFound,
+      });
+    }
   } catch (err) {
     res.status(502).json({
       success: false,
