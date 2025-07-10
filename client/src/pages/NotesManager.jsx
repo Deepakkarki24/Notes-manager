@@ -2,29 +2,15 @@ import React, { useContext, useState } from "react";
 import Navbar from "./Navbar";
 import { ThemeContext } from "../context/ThemeContext";
 import { UserContext } from "../context/UserContext";
+import { noteContext } from "../context/NoteContext";
 
 const NotesManager = () => {
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState({ title: "", content: "" });
+  let { notes, setNotes, newNote, setNewNote, handleAddNote, handleChange } =
+    useContext(noteContext);
   const [editingIndex, setEditingIndex] = useState(null);
 
   const { theme } = useContext(ThemeContext);
   const { user } = useContext(UserContext);
-
-  const handleChange = (e) => {
-    setNewNote({ ...newNote, [e.target.name]: e.target.value });
-  };
-
-  const handleAddNote = () => {
-    if (!newNote.title.trim() || !newNote.content.trim()) return;
-    setNotes([...notes, newNote]);
-    setNewNote({ title: "", content: "" });
-  };
-
-  const handleEditNote = (index) => {
-    setNewNote(notes[index]);
-    setEditingIndex(index);
-  };
 
   const handleUpdateNote = () => {
     const updatedNotes = [...notes];
@@ -109,10 +95,10 @@ const NotesManager = () => {
         </div>
 
         {/* Notes List */}
-        {notes.length > 0 && (
+        {notes.length > 0 ? (
           <div className="min-w-1/2">
             {notes.map((note, index) => (
-              <div key={index} className="border p-4 rounded-md shadow-sm">
+              <div key={index} className="border mb-2 p-4 rounded-md shadow-sm">
                 <h2 className="text-xl font-semibold">{note.title}</h2>
                 <p className="mt-1">{note.content}</p>
                 <div className="mt-3 space-x-3">
@@ -131,6 +117,18 @@ const NotesManager = () => {
                 </div>
               </div>
             ))}
+          </div>
+        ) : (
+          <div
+            className={`flex justify-center items-center min-w-1/2
+            ${
+              theme === "dark"
+                ? "bg-[var(--darkThemeBg)] text-[var(--darkThemeText)]"
+                : "bg-[var(--lightThemeBg)] text-[var(--lightThemeText)]"
+            }
+          `}
+          >
+            <span className="text-2xl">Nothing Special 🎈</span>
           </div>
         )}
       </div>

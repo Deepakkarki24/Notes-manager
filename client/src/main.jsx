@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router";
 import { UserProvider } from "./context/UserContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { NoteProvider } from "./context/NoteContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <UserProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <NoteProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </NoteProvider>
     </UserProvider>
   </BrowserRouter>
 );

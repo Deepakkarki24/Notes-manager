@@ -1,5 +1,5 @@
 import express from "express";
-import Notes from "../models/note.models.js";
+import Note from "../models/note.models.js";
 import User from "../models/user.models.js";
 
 const noteRouter = express.Router();
@@ -31,7 +31,7 @@ noteRouter.post("/add-note", async (req, res) => {
       });
     }
 
-    let newNote = new Notes({
+    let newNote = new Note({
       user: user.username,
       title,
       content,
@@ -48,6 +48,48 @@ noteRouter.post("/add-note", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
+    });
+  }
+});
+
+noteRouter.get("/get-notes", async (req, res) => {
+  let token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(409).json({
+      success: false,
+      message: "Token not found or user not logged in!",
+    });
+  }
+
+  try {
+    let user = await User.findOne({ token: token });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    let data = await Note.find({ user: user.username });
+
+    if (!data) {
+      return res.status(401).json({
+        success: false,
+        message: "data not found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Succesfully fetched notes",
+      data: data,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: err.message,
     });
   }
 });
