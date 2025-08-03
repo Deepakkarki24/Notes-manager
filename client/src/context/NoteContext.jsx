@@ -19,12 +19,26 @@ export const NoteProvider = ({ children }) => {
       content,
     };
 
-    api.post("/add-note", data, {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    });
+    api
+      .post("/add-note", data, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log("Note added:", res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to add note:", err);
+      });
     setNewNote({ title: "", content: "" });
+  };
+
+  const handleDeleteNote = (id) => {
+    api
+      .delete(`/delete-note/${id}`)
+      .then((res) => res.data)
+      .catch((err) => console.log(err.message));
   };
 
   const handleChange = (e) => {
@@ -42,7 +56,7 @@ export const NoteProvider = ({ children }) => {
         .then((res) => setNotes(res.data.data))
         .catch((err) => console.log(err));
     }
-  }, [token]);
+  }, [token, notes]);
 
   return (
     <noteContext.Provider
@@ -52,6 +66,7 @@ export const NoteProvider = ({ children }) => {
         newNote,
         setNewNote,
         handleAddNote,
+        handleDeleteNote,
         handleChange,
       }}
     >

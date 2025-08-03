@@ -94,4 +94,20 @@ noteRouter.get("/get-notes", async (req, res) => {
   }
 });
 
+noteRouter.delete("/delete-note/:note_id", async (req, res) => {
+  try {
+    let deletedNote = await Note.findByIdAndDelete(req.params.note_id);
+    if (!deletedNote) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    res.json({ message: "Note deleted successfully", deletedNote });
+  } catch (err) {
+    return res.status(404).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 export default noteRouter;

@@ -5,8 +5,15 @@ import { UserContext } from "../context/UserContext";
 import { noteContext } from "../context/NoteContext";
 
 const NotesManager = () => {
-  let { notes, setNotes, newNote, setNewNote, handleAddNote, handleChange } =
-    useContext(noteContext);
+  let {
+    notes,
+    setNotes,
+    newNote,
+    setNewNote,
+    handleAddNote,
+    handleChange,
+    handleDeleteNote,
+  } = useContext(noteContext);
   const [editingIndex, setEditingIndex] = useState(null);
 
   const { theme } = useContext(ThemeContext);
@@ -18,10 +25,6 @@ const NotesManager = () => {
     setNotes(updatedNotes);
     setNewNote({ title: "", content: "" });
     setEditingIndex(null);
-  };
-
-  const handleDeleteNote = (index) => {
-    setNotes(notes.filter((_, i) => i !== index));
   };
 
   return (
@@ -109,7 +112,7 @@ const NotesManager = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteNote(index)}
+                    onClick={() => handleDeleteNote(note._id)}
                     className="text-red-600 hover:underline"
                   >
                     Delete
