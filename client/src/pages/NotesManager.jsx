@@ -13,19 +13,12 @@ const NotesManager = () => {
     handleAddNote,
     handleChange,
     handleDeleteNote,
+    handleEditNote,
+    isEdited,
   } = useContext(noteContext);
-  const [editingIndex, setEditingIndex] = useState(null);
 
   const { theme } = useContext(ThemeContext);
   const { user } = useContext(UserContext);
-
-  const handleUpdateNote = () => {
-    const updatedNotes = [...notes];
-    updatedNotes[editingIndex] = newNote;
-    setNotes(updatedNotes);
-    setNewNote({ title: "", content: "" });
-    setEditingIndex(null);
-  };
 
   return (
     <div
@@ -74,21 +67,12 @@ const NotesManager = () => {
                 }`}
           ></textarea>
 
-          {editingIndex !== null ? (
-            <button
-              onClick={handleUpdateNote}
-              className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600"
-            >
-              Update Note
-            </button>
-          ) : (
-            <button
-              onClick={handleAddNote}
-              className="bg-blue-500 text-blue-500 px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Add Note
-            </button>
-          )}
+          <button
+            onClick={handleAddNote}
+            className="bg-blue-500 text-blue-500 px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            {isEdited ? "Update" : "Add"}
+          </button>
 
           {notes.length === 0 && (
             <p className="text-gray-500">
@@ -106,7 +90,7 @@ const NotesManager = () => {
                 <p className="mt-1">{note.content}</p>
                 <div className="mt-3 space-x-3">
                   <button
-                    onClick={() => handleEditNote(index)}
+                    onClick={() => handleEditNote(note, index)}
                     className="text-yellow-600 hover:underline"
                   >
                     Edit

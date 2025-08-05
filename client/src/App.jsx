@@ -7,6 +7,7 @@ import { UserContext } from "./context/UserContext";
 
 const App = () => {
   const { token } = useContext(UserContext);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />

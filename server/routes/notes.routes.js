@@ -110,4 +110,30 @@ noteRouter.delete("/delete-note/:note_id", async (req, res) => {
   }
 });
 
+noteRouter.patch("/update-note/:note_id", async (req, res) => {
+  let noteId = req.params.note_id;
+  let { title, content } = req.body;
+  console.log(title, content);
+
+  if (!noteId) {
+    return res.status(400).json({
+      success: false,
+      message: "Note found!",
+    });
+  }
+  try {
+    let foundNote = await Note.findByIdAndUpdate(noteId, {
+      title,
+      content,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "updated!",
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: res.message });
+  }
+});
+
 export default noteRouter;
